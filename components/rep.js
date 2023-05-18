@@ -1,19 +1,39 @@
-const todoModel = require("../db/model");
+const TodoTask = require("../db/model");
 
 const todosRepository = {
   getAllTodos: async () => {
-    const todos = await todoModel.find({});
-    console.log(todos);
-    return todos;
+    try {
+      const todos = await TodoTask.find({});
+      console.log(todos);
+      return todos;
+    } catch (error) {
+      console.error(error);
+    }
   },
 
-  createTodo: async (value) => {
-    const todo = new todoModel({ value });
+  createTodo: async (title) => {
+    const todo = new TodoTask({
+      title,
+      completed: false,
+    });
 
     await todo.save();
     console.log(todo);
-    
-    return todo;
+
+    const todos = await TodoTask.find({});
+
+    return todos;
+  },
+
+  deleteTodo: async (incomingID) => {
+    try {
+      const todos = await TodoTask.deleteOne({_id: incomingID})
+
+      console.log(todos);
+      return todos;
+    } catch (error) {
+      console.error(error);
+    }
   },
 
   updateTodo: async (id, value) => {

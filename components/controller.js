@@ -1,31 +1,47 @@
 const express = require("express");
 const router = express.Router();
+const TodoTask = require("../db/model");
 
-const todoServices = require('./service');
+const todosRepository = require('./rep');
 
 router.get("/", async (req, res) => {
-  try {
-		const todos = await todoServices.getAllTodos();
+	try {
+		const todos = await todosRepository.getAllTodos();
 		res.send(todos);
-	} catch (error) {
+	}
+	catch (error) {
 		res.status(400).send(error.message);
 	}
 });
 
+//Add method
 router.post("/", async (req, res) => {
 	try {
-		const todo = await todoServices.createTodo(req.body);
+		const todo = await todosRepository.createTodo(req.body.title);
 		res.send(todo);
 	} catch (error) {
 		res.status(400).send(error.message);
 	}
 });
 
+//Delete method
+router.delete("/", async (req, res) => {
+	try {
+		console.log(req.body);
+		// const todo = await todosRepository.deleteTodo(req.body);
+		// res.send(todo);
+	} catch (error) {
+		res.status(400).send(error.message);
+	}
+});
+
+
+
 router.patch("/", async (req, res) => {
 	try {
-		const updatedTodo = await todoServices.updateTodo(req.body)
+		const updatedTodo = await todosRepository.updateTodo(req.body)
 		res.send(updatedTodo)
- 	} catch (error) {
+	} catch (error) {
 		res.status(400).send(error.message);
 	}
 })
