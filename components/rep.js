@@ -1,26 +1,49 @@
-const todoModel = require("../db/model");
+const TodoTask = require("../db/model");
 
 const todosRepository = {
   getAllTodos: async () => {
-    const todos = await todoModel.find({});
-    console.log(todos);
+    try {
+      const todos = await TodoTask.find({});
+      return todos;
+    } catch (error) {
+      console.error(error);
+    }
+  },
+
+  createTodo: async (title) => {
+    const todo = new TodoTask({
+      title,
+      completed: false,
+    });
+
+    await todo.save();
+    const todos = await TodoTask.find({});
     return todos;
   },
 
-  createTodo: async (value) => {
-    const todo = new todoModel({ value });
+  deleteTodo: async (incomingID) => {
+    try {
+      const todo = await TodoTask.findByIdAndDelete(incomingID);
+      const todos = await TodoTask.find({});
+      console.log(111, todo);
 
-    await todo.save();
-    console.log(todo);
-    
-    return todo;
+      return todos;
+    } catch (error) {
+      console.error(error);
+    }
   },
 
-  updateTodo: async (id, value) => {
-    const todo = await todoModel.findByIdAndUpdate(id, value, { new: true });
-    console.log(todo);
+  updateTodo: async (data) => {
+    const {_id, title, completed} = data;
+    const todo = await TodoTask.findByIdAndUpdate(_id, {
+      title, 
+      completed,
+    }, {
+      new: true,
+    });
+    const todos = await TodoTask.find({});
 
-    return todo;
+    return todos;
   },
 };
 

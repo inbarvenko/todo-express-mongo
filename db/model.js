@@ -1,30 +1,14 @@
 const mongoose = require('mongoose');
 
-const TodoSchema = new mongoose.Schema({
-		value: {
-			type: String,
-			requred: true,
-		},
-		new: {
-			type: Boolean,
-			default: false,
-		},
-		id: {
-			type: String,
-			requred: true,
-		}
+const todoTaskSchema = new mongoose.Schema({
+	title: {
+		type: String,
+		required: true,
 	},
-	{
-		timestamps: true,
-	}
-).method("toJSON", function() {
-	const { __v, _id, ...other } = this.toObject();
+	completed: {
+		type: Boolean,
+		default: false,
+	},
+})
 
-	other.id = _id;
-
-	return other;
-});
-
-const Todo = mongoose.model("Todo", TodoSchema);
-
-module.exports = Todo;
+module.exports = mongoose.model('TodoTask', todoTaskSchema);
