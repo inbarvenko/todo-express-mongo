@@ -27,16 +27,15 @@ const todosRepository = {
     });
 
     await todo.save();
-    const todos = await TodoTask.find({});
-    return todos;
+    console.log(todo);
+    return todo;
   },
 
   deleteTodo: async (incomingID) => {
     try {
       const todo = await TodoTask.findByIdAndDelete(incomingID);
-      const todos = await TodoTask.find({});
-
-      return todos;
+      console.log(todo);
+      return todo;
     } catch (error) {
       console.error(error);
     }
@@ -50,9 +49,9 @@ const todosRepository = {
     }, {
       new: true,
     });
-    const todos = await TodoTask.find({});
 
-    return todos;
+    console.log(todo);
+    return todo;
   },
 };
 

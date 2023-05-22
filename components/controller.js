@@ -19,8 +19,8 @@ router.get("/", async (req, res) => {
 //Add method
 router.post("/", async (req, res) => {
 	try {
-		const todo = await todosRepository.createTodo(req.body.title);
-		res.send(todo);
+		const newTodo = await todosRepository.createTodo(req.body.title);
+		res.send(newTodo);
 	} catch (error) {
 		res.status(400).send(error.message);
 	}
@@ -29,8 +29,8 @@ router.post("/", async (req, res) => {
 //Delete method
 router.delete("/", async (req, res) => {
 	try {
-		const todo = await todosRepository.deleteTodo(req.body._id);
-		res.send(todo);
+		const deletedTodo = await todosRepository.deleteTodo(req.body._id);
+		res.send(deletedTodo);
 	} catch (error) {
 		res.status(400).send(error.message);
 	}
