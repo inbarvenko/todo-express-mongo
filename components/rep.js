@@ -1,9 +1,19 @@
 const TodoTask = require("../db/model");
 
 const todosRepository = {
-  getAllTodos: async () => {
+  getTodos: async (filter) => {
     try {
-      const todos = await TodoTask.find({});
+      let todos = await TodoTask.find({});
+      switch (filter) {
+        case 'active':
+          todos = await TodoTask.find({ completed: false });
+          break;
+        case 'completed':
+          todos = await TodoTask.find({ completed: true });
+          break;
+        default:
+          break;
+      }
       return todos;
     } catch (error) {
       console.error(error);
@@ -25,7 +35,6 @@ const todosRepository = {
     try {
       const todo = await TodoTask.findByIdAndDelete(incomingID);
       const todos = await TodoTask.find({});
-      console.log(111, todo);
 
       return todos;
     } catch (error) {
@@ -34,9 +43,9 @@ const todosRepository = {
   },
 
   updateTodo: async (data) => {
-    const {_id, title, completed} = data;
+    const { _id, title, completed } = data;
     const todo = await TodoTask.findByIdAndUpdate(_id, {
-      title, 
+      title,
       completed,
     }, {
       new: true,
