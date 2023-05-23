@@ -6,7 +6,20 @@ const todosRepository = require('./rep');
 
 router.get("/", async (req, res) => {
 	try {
-		const todos = await todosRepository.getAllTodos();
+		const filter = req.body;
+		console.log(1, filter);
+		console.log(req);
+		let todos = [];
+
+		switch (filter) {
+			case 'active':
+				todos = await todosRepository.getActiveTodos();
+			case 'completed':
+				todos = await todosRepository.getCompletedTodos();
+			default:
+				todos = await todosRepository.getAllTodos();
+		}
+		
 		res.send(todos);
 	}
 	catch (error) {
@@ -27,7 +40,6 @@ router.post("/", async (req, res) => {
 //Delete method
 router.delete("/", async (req, res) => {
 	try {
-		console.log(222, req.body);
 		const todo = await todosRepository.deleteTodo(req.body._id);
 		res.send(todo);
 	} catch (error) {

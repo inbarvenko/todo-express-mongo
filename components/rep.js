@@ -10,6 +10,24 @@ const todosRepository = {
     }
   },
 
+  getCompletedTodos: async () => {
+    try {
+      const todos = await TodoTask.find({completed: true});
+      return todos;
+    } catch (error) {
+      console.error(error);
+    }
+  },
+
+  getActiveTodos: async () => {
+    try {
+      const todos = await TodoTask.find({completed: false});
+      return todos;
+    } catch (error) {
+      console.error(error);
+    }
+  },
+
   createTodo: async (title) => {
     const todo = new TodoTask({
       title,
@@ -25,7 +43,6 @@ const todosRepository = {
     try {
       const todo = await TodoTask.findByIdAndDelete(incomingID);
       const todos = await TodoTask.find({});
-      console.log(111, todo);
 
       return todos;
     } catch (error) {
