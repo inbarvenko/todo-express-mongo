@@ -6,43 +6,30 @@ const todosRepository = {
       const todosForPage = 10;
       const currentPage = curPage || 1;
       const activeTasks = (await TodoTask.find({completed: false})).length;
+      let filteredObject = {};
 
-      let todos = await TodoTask
-        .find({})
-        .skip((currentPage - 1) * todosForPage)
-        .limit(todosForPage);
-
-      let filteredItems = (await TodoTask.find({})).length;
       switch (filter) {
         case 'active':
-          todos = await TodoTask
-          .find({ completed: false })
-          .skip((currentPage - 1) * todosForPage)
-          .limit(todosForPage);
-
-          filteredItems = activeTasks;
+          filteredObject = { completed: false };
           break;
         case 'completed':
-          todos = await TodoTask
-          .find({ completed: true })
-          .skip((currentPage - 1) * todosForPage)
-          .limit(todosForPage);
-
-          filteredItems = (await TodoTask.find({completed: true})).length;
+          filteredObject = { completed: true };
           break;
         default:
           break;
       }
 
-      console.log(activeTasks);
+      let todos = await TodoTask
+        .find(filteredObject)
+        .skip((currentPage - 1) * todosForPage)
+        .limit(todosForPage);
+
+      let filteredItems = (await TodoTask.find(filteredObject)).length;
 
       //ceil - округление до ближайшего большего целого
       const allPages = Math.ceil(filteredItems / todosForPage);
-      // console.log(allPages);
 
       const pages = Array.from({ length: allPages }, (g, index) => index + 1);
-      // console.log(pages);
-      // console.log(todos);
 
       return {todos, pages, activeTasks};
     } catch (error) {
@@ -57,7 +44,6 @@ const todosRepository = {
     });
 
     await todo.save();
-    console.log(todo);
     
     return todo;
   },
@@ -80,7 +66,6 @@ const todosRepository = {
       new: true,
     });
 
-    console.log(todo);
     return todo;
   },
 };

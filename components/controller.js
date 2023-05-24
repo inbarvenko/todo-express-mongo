@@ -8,7 +8,7 @@ router.get("/", async (req, res) => {
 		const filter = req.query.filter;
 		const currentPage = req.query.currentPage;
 		const obj = await todosRepository.getTodos(filter, currentPage);
-		res.send(obj);
+		res.json(obj);
 	}
 	catch (error) {
 		res.status(400).send(error.message);
@@ -40,7 +40,7 @@ router.delete("/", async (req, res) => {
 router.patch("/", async (req, res) => {
 	try {
 		const updatedTodo = await todosRepository.updateTodo(req.body);
-		res.send(updatedTodo);
+		res.json(updatedTodo);
 	} catch (error) {
 		res.status(400).send(error.message);
 	}
