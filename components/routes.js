@@ -1,13 +1,13 @@
 const express = require("express");
 const router = express.Router();
 
-const todosRepository = require('./rep');
+const todosController = require('./controllers');
 
 router.get("/", async (req, res) => {
 	try {
 		const filter = req.query.filter;
 		const currentPage = req.query.currentPage;
-		const obj = await todosRepository.getTodos(filter, currentPage);
+		const obj = await todosController.getTodos(filter, currentPage);
 		res.json(obj);
 	}
 	catch (error) {
@@ -19,7 +19,7 @@ router.get("/", async (req, res) => {
 //Add method
 router.post("/", async (req, res) => {
 	try {
-		const newTodo = await todosRepository.createTodo(req.body.title);
+		const newTodo = await todosController.createTodo(req.body.title);
 		res.send(newTodo);
 	} catch (error) {
 		res.status(400).send(error.message);
@@ -29,7 +29,7 @@ router.post("/", async (req, res) => {
 //Delete method
 router.delete("/", async (req, res) => {
 	try {
-		const deletedTodo = await todosRepository.deleteTodo(req.body._id);
+		const deletedTodo = await todosController.deleteTodo(req.body._id);
 		res.send(deletedTodo);
 	} catch (error) {
 		res.status(400).send(error.message);
@@ -39,7 +39,7 @@ router.delete("/", async (req, res) => {
 //Change todo method
 router.patch("/", async (req, res) => {
 	try {
-		const updatedTodo = await todosRepository.updateTodo(req.body);
+		const updatedTodo = await todosController.updateTodo(req.body);
 		res.json(updatedTodo);
 	} catch (error) {
 		res.status(400).send(error.message);

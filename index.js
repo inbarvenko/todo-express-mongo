@@ -5,7 +5,7 @@ const { default: mongoose } = require("mongoose");
 
 const app = express();
 
-const todosModule = require("./components/controller");
+const todosModule = require("./components/routes");
 
 app.use(express.json());
 
