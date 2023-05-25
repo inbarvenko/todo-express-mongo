@@ -5,33 +5,58 @@ const todosRepository = {
     try {
       const todosForPage = 10;
       const currentPage = curPage || 1;
-      const activeTasks = (await TodoTask.find({completed: false})).length;
+      let activeTasks = 0;
+      let todos = [];
+      let filteredItems = 0;
       let filteredObject = {};
 
       switch (filter) {
         case 'active':
           filteredObject = { completed: false };
+          // filteredItems = activeTasks;
           break;
         case 'completed':
           filteredObject = { completed: true };
+          // filteredItems = await TodoTask.countDocuments({completed: true});
           break;
         default:
+          // filteredItems = await TodoTask.countDocuments({});
           break;
       }
 
-      let todos = await TodoTask
-        .find(filteredObject)
-        .skip((currentPage - 1) * todosForPage)
-        .limit(todosForPage);
+      await Promise.all([
+        new Promise(async (resolve, reject) => {
+          const todo = await TodoTask
+            .find(filteredObject)
+            .skip((currentPage - 1) * todosForPage)
+            .limit(todosForPage);
 
-      let filteredItems = (await TodoTask.find(filteredObject)).length;
+          resolve(todo);
+        }
+        ),
+        new Promise(async (resolve, reject) => {
+          const active = await TodoTask.countDocuments({ completed: false });
+          resolve(active);
+        }
+        ),
+        new Promise(async (resolve, reject) => {
+          const allFiltered = await TodoTask.countDocuments(filteredObject);
+          resolve(allFiltered);
+        }
+        ),
+      ]).then((values) => {
+        todos = values[0];
+        activeTasks = values[1];
+        filteredItems = values[2];
+      }
+      );
 
       //ceil - округление до ближайшего большего целого
-      const allPages = Math.ceil(filteredItems / todosForPage);
+      const allPages = await Math.ceil(filteredItems / todosForPage);
 
-      const pages = Array.from({ length: allPages }, (g, index) => index + 1);
+      const pages = await Array.from({ length: allPages }, (g, index) => index + 1);
 
-      return {todos, pages, activeTasks};
+      return { todos, pages, activeTasks };
     } catch (error) {
       console.error(error);
     }
@@ -44,7 +69,7 @@ const todosRepository = {
     });
 
     await todo.save();
-    
+
     return todo;
   },
 
